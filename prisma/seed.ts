@@ -16,37 +16,18 @@ async function main() {
     "Dessert Delights",
   ];
 
-  const restaurants = await Promise.all(
-    restaurantNames.map((name) =>
-      prisma.restaurant.create({
-        data: {
-          name,
-          imageUrl: `https://picsum.photos/seed/${name.replace(
-            /\s+/g,
-            "-",
-          )}/150`,
-          deliveryFee: 5,
-          deliveryTime: Math.floor(Math.random() * 30) + 10,
-        },
-      }),
-    ),
-  );
-
-  const categories = await Promise.all(
-    ["Sucos", "Pratos", "Lanches", "Pizzas", "Sobremesas", "Bebidas"].map(
-      (categoryName, index) =>
-        prisma.category.create({
-          data: {
-            name: categoryName,
-            imageUrl: `https://picsum.photos/seed/${categoryName.replace(
-              /\s+/g,
-              "-",
-            )}/150`,
-            restaurantId: restaurants[index % restaurants.length].id,
-          },
-        }),
-    ),
-  );
+  const categoryNames = [
+    "Sucos",
+    "Pratos",
+    "Lanches",
+    "Pizzas",
+    "Sobremesas",
+    "Bebidas",
+    "Saladas",
+    "Cafés",
+    "Petiscos",
+    "Frutos do Mar",
+  ];
 
   const productNames = [
     "Pizza Margherita",
@@ -61,26 +42,56 @@ async function main() {
     "Chocolate Cake",
   ];
 
-  const products = await Promise.all(
-    productNames.map((productName) =>
-      prisma.product.create({
+  const restaurants = await Promise.all(
+    restaurantNames.map((name) =>
+      prisma.restaurant.create({
         data: {
-          name: productName,
-          imageUrl: `https://picsum.photos/seed/${productName.replace(
-            /\s+/g,
-            "-",
-          )}/150`,
-          description: `Delicious ${productName}`,
-          originalPrice: (Math.random() * 20 + 5).toFixed(2),
-          discountPercentage: Math.floor(Math.random() * 30),
-          restaurantId:
-            restaurants[Math.floor(Math.random() * restaurants.length)].id,
-          categoryId:
-            categories[Math.floor(Math.random() * categories.length)].id,
+          name,
+          imageUrl: `https://picsum.photos/seed/${name.replace(/\s+/g, "-")}/150`,
+          deliveryFee: 5,
+          deliveryTime: Math.floor(Math.random() * 30) + 10,
         },
       }),
     ),
   );
+
+  for (const restaurant of restaurants) {
+    // Criar no mínimo 6 categorias para cada restaurante
+    const restaurantCategories = categoryNames
+      .slice(0, 6)
+      .map((categoryName) => ({
+        name: categoryName,
+        imageUrl: `https://picsum.photos/seed/${categoryName.replace(/\s+/g, "-")}/150`,
+        restaurantId: restaurant.id,
+      }));
+
+    const createdCategories = await prisma.category.createMany({
+      data: restaurantCategories,
+    });
+
+    // Buscar as categorias recém-criadas
+    const categoriesForRestaurant = await prisma.category.findMany({
+      where: { restaurantId: restaurant.id },
+    });
+
+    // Criar no mínimo 6 produtos para cada restaurante, vinculando-os às categorias
+    const restaurantProducts = productNames
+      .slice(0, 6)
+      .map((productName, index) => ({
+        name: productName,
+        imageUrl: `https://picsum.photos/seed/${productName.replace(/\s+/g, "-")}/150`,
+        description: `Delicious ${productName}`,
+        originalPrice: (Math.random() * 20 + 5).toFixed(2),
+        discountPercentage: Math.floor(Math.random() * 30),
+        restaurantId: restaurant.id,
+        categoryId:
+          categoriesForRestaurant[index % categoriesForRestaurant.length].id,
+      }));
+
+    await prisma.product.createMany({
+      data: restaurantProducts,
+    });
+  }
 
   console.log("Dados criados com sucesso!");
 }

@@ -14,7 +14,20 @@ export const getRestaurant = async (data: GetRestaurantSchema) => {
       id: data.id,
     },
     include: {
-      categories: true,
+      categories: {
+        include: {
+          products: {
+            include: {
+              restaurant: true,
+            },
+          },
+        },
+      },
+      products: {
+        include: {
+          restaurant: true,
+        },
+      },
     },
   });
 };

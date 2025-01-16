@@ -1,3 +1,4 @@
+import { Header } from "../_components/header";
 import { Banner } from "./_components/banner";
 import { RecommendedProducts } from "./_components/recommended-products";
 import { RecommendedRestaurants } from "./_components/recommended-restaurants";
@@ -6,6 +7,7 @@ import { SearchRestaurant } from "./_components/search-restaurant";
 const Home = () => {
   return (
     <>
+      <Header />
       <section className="px-5 pt-6">
         <SearchRestaurant />
       </section>

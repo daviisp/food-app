@@ -2,6 +2,7 @@ import { formatPrice } from "@/helpers/price";
 import { Restaurant } from "@prisma/client";
 import { BikeIcon, Heart, Star, TimerIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface RestaurantItemProps {
   restaurant: Restaurant;
@@ -9,7 +10,10 @@ interface RestaurantItemProps {
 
 export const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
   return (
-    <div className="h-auto min-w-[226px]">
+    <Link
+      href={`/restaurants/${restaurant.id}`}
+      className="h-auto min-w-[226px]"
+    >
       <div className="relative min-h-[136px] w-full">
         <Image
           src={restaurant.imageUrl}
@@ -48,6 +52,6 @@ export const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

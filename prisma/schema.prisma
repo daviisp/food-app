@@ -13,8 +13,8 @@ model Restaurant {
   imageUrl     String
   deliveryFee  Decimal    @db.Decimal(10, 2)
   deliveryTime Int
-  Category     Category[]
-  Product      Product[]
+  categories   Category[]
+  products     Product[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -2,6 +2,7 @@ import { getProductsRecommended } from "@/actions/get-products-recommended";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { ProductList } from "../../_components/product-list";
+import Link from "next/link";
 
 export const RecommendedProducts = async () => {
   const products = await getProductsRecommended();
@@ -13,9 +14,12 @@ export const RecommendedProducts = async () => {
         <Button
           variant="ghost"
           className="hover:text-[#EA1D2C]/ w-fit gap-0 p-0 text-xs text-[#EA1D2C] hover:bg-transparent"
+          asChild
         >
-          Ver todos
-          <ChevronRight size={16} />
+          <Link href="/products">
+            Ver todos
+            <ChevronRight size={16} />
+          </Link>
         </Button>
       </div>
       <div>

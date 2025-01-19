@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { RestaurantBanner } from "./_components/restaurant-banner";
 import { RestaurantInfo } from "./_components/restaurant-info";
 import { BestProductsOfRestaurant } from "./_components/best-products.of-restaurant";
-import { CategoryWithProducts } from "./_components/category-with-products";
+import { CategoryWithProducts } from "../../_components/category-with-products";
 
 interface RestaurantPageParams {
   params: Promise<{ id: string }>;

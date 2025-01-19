@@ -22,7 +22,7 @@ export const CategoryWithProducts = ({
 }: CategoryWithProductsProps) => {
   return (
     <>
-      {restaurant.categories.slice(0, 1).map((category) => (
+      {restaurant.categories.slice(2, 3).map((category) => (
         <div key={category.id}>
           <h2 className="pb-4 font-semibold">{category.name}</h2>
           <ProductList products={category.products} />

@@ -23,7 +23,12 @@ async function main() {
     "Pizzas",
     "Sobremesas",
     "Bebidas",
+    "Saladas",
+    "Cafés",
+    "Petiscos",
+    "Frutos do Mar",
   ];
+
   const productNames = [
     "Pizza Margherita",
     "Cheeseburger",
@@ -37,46 +42,55 @@ async function main() {
     "Chocolate Cake",
   ];
 
-  for (const restaurantName of restaurantNames) {
-    const restaurant = await prisma.restaurant.create({
-      data: {
-        name: restaurantName,
-        imageUrl: `https://picsum.photos/seed/${restaurantName.replace(/\s+/g, "-")}/150`,
-        deliveryFee: 5,
-        deliveryTime: Math.floor(Math.random() * 30) + 10,
-      },
+  const restaurants = await Promise.all(
+    restaurantNames.map((name) =>
+      prisma.restaurant.create({
+        data: {
+          name,
+          imageUrl: `https://picsum.photos/seed/${name.replace(/\s+/g, "-")}/150`,
+          deliveryFee: 5,
+          deliveryTime: Math.floor(Math.random() * 30) + 10,
+        },
+      }),
+    ),
+  );
+
+  for (const restaurant of restaurants) {
+    const restaurantCategories = categoryNames
+      .slice(0, 6)
+      .map((categoryName) => ({
+        name: categoryName,
+        imageUrl: `https://picsum.photos/seed/${categoryName.replace(/\s+/g, "-")}/150`,
+        restaurantId: restaurant.id,
+      }));
+
+    const createdCategories = await prisma.category.createMany({
+      data: restaurantCategories,
     });
 
-    const categories = [];
-    for (let i = 0; i < 6; i++) {
-      const category = await prisma.category.create({
-        data: {
-          name: categoryNames[i % categoryNames.length],
-          imageUrl: `https://picsum.photos/seed/${categoryNames[i].replace(/\s+/g, "-")}/150`,
-          restaurantId: restaurant.id,
-        },
-      });
-      categories.push(category);
-    }
+    const categoriesForRestaurant = await prisma.category.findMany({
+      where: { restaurantId: restaurant.id },
+    });
 
-    for (const category of categories) {
-      for (let i = 0; i < 6; i++) {
-        await prisma.product.create({
-          data: {
-            name: productNames[i % productNames.length],
-            imageUrl: `https://picsum.photos/seed/${productNames[i].replace(/\s+/g, "-")}/150`,
-            description: `Delicious ${productNames[i]}`,
-            originalPrice: (Math.random() * 20 + 5).toFixed(2),
-            discountPercentage: Math.floor(Math.random() * 30),
-            restaurantId: restaurant.id,
-            categoryId: category.id,
-          },
-        });
-      }
-    }
+    const restaurantProducts = productNames
+      .slice(0, 6)
+      .map((productName, index) => ({
+        name: productName,
+        imageUrl: `https://picsum.photos/seed/${productName.replace(/\s+/g, "-")}/150`,
+        description: `Delicious ${productName}`,
+        originalPrice: (Math.random() * 20 + 5).toFixed(2),
+        discountPercentage: Math.floor(Math.random() * 30),
+        restaurantId: restaurant.id,
+        categoryId:
+          categoriesForRestaurant[index % categoriesForRestaurant.length].id,
+      }));
+
+    await prisma.product.createMany({
+      data: restaurantProducts,
+    });
   }
 
-  console.log("Seed data created successfully!");
+  console.log("Dados criados com sucesso!");
 }
 
 main()

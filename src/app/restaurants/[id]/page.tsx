@@ -18,16 +18,16 @@ const RestaurantPage = async ({ params }: RestaurantPageParams) => {
   }
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <section className="relative min-h-52 w-full">
         <RestaurantBanner restaurant={restaurant} />
       </section>
       <section className="relative z-50 mt-[-1rem] w-full rounded-tl-3xl rounded-tr-3xl bg-white px-5">
         <RestaurantInfo restaurant={restaurant} />
-        <section className="pt-8">
+        <section className="overflow-x-auto pt-8 [&::-webkit-scrollbar]:hidden">
           <BestProductsOfRestaurant restaurant={restaurant} />
         </section>
-        <section className="flex gap-4 pt-8">
+        <section className="flex gap-4 overflow-x-auto pt-8 [&::-webkit-scrollbar]:hidden">
           <CategoryWithProducts restaurant={restaurant} />
         </section>
       </section>

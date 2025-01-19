@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   restaurantName: z.string().trim().min(1, {
@@ -26,9 +27,16 @@ type FormSchema = z.infer<typeof formSchema>;
 export const SearchRestaurant = () => {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      restaurantName: "",
+    },
   });
 
-  const onSubmit = (data: FormSchema) => {};
+  const router = useRouter();
+
+  const onSubmit = (data: FormSchema) => {
+    router.push(`/restaurants?restaurantName=${data.restaurantName}`);
+  };
 
   return (
     <Form {...form}>

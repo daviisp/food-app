@@ -1,10 +1,11 @@
-import { getRestaurantsRecommeded } from "@/actions/get-restaurants-recommended";
+import { getRestaurants } from "@/actions/get-restaurants";
 import { RestaurantList } from "@/app/_components/restaurant-list";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export const RecommendedRestaurants = async () => {
-  const restaurants = await getRestaurantsRecommeded();
+  const restaurants = await getRestaurants({});
 
   return (
     <div className="space-y-4">
@@ -15,9 +16,12 @@ export const RecommendedRestaurants = async () => {
         <Button
           variant="ghost"
           className="hover:text-[#EA1D2C]/ w-fit gap-0 p-0 text-xs text-[#EA1D2C] hover:bg-transparent"
+          asChild
         >
-          Ver todos
-          <ChevronRight size={16} />
+          <Link href="/restaurants">
+            Ver todos
+            <ChevronRight size={16} />
+          </Link>
         </Button>
       </div>
       <div>

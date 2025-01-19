@@ -45,7 +45,7 @@ model Product {
   discountPercentage Int
   restaurant         Restaurant @relation(fields: [restaurantId], references: [id])
   restaurantId       String
-  category           Category   @relation(fields: [categoryId], references: [id])
+  category           Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId         String
 
   createdAt DateTime @default(now())

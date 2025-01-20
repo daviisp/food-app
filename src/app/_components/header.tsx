@@ -5,7 +5,7 @@ import { UserProfile } from "./user-profile";
 
 export const Header = () => {
   return (
-    <header className="flex items-center justify-between px-5 pt-6">
+    <header className="mt-6 flex items-center justify-between px-5">
       <Link href="/">
         <Image
           src="/logo.svg"

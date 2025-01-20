@@ -1,6 +1,7 @@
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { UserProfile } from "./user-profile";
 
 export const Header = () => {
   return (
@@ -15,7 +16,7 @@ export const Header = () => {
         />
       </Link>
       <div>
-        <Menu />
+        <UserProfile />
       </div>
     </header>
   );

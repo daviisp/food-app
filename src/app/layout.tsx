@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Header } from "./_components/header";
+import { CartContextProvider } from "@/context/cart";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} antialiased`}>
-        <main className="pb-8">{children}</main>
+        <main className="pb-8">
+          <CartContextProvider>{children}</CartContextProvider>
+        </main>
       </body>
     </html>
   );

@@ -33,7 +33,7 @@ export const UserProfile = async () => {
           <section className="flex items-center gap-3 pt-6">
             <Avatar>
               <AvatarImage src={session.user.image!} alt={session.user.name!} />
-              <AvatarFallback>{session.user.name}</AvatarFallback>
+              <AvatarFallback>{session.user.name?.slice(0, 1)}</AvatarFallback>
             </Avatar>
             <div>
               <p className="font-semibold text-[#323232]">

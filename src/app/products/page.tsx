@@ -10,7 +10,13 @@ const ProductsPage = async () => {
       <Header />
       <section className="flex flex-col gap-4 px-5 pt-6">
         {products.map((product) => (
-          <ProductItem product={product} key={product.id} />
+          <ProductItem
+            product={{
+              ...product,
+              originalPrice: Number(product.originalPrice),
+            }}
+            key={product.id}
+          />
         ))}
       </section>
     </>

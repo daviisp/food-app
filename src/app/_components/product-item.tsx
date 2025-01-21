@@ -34,7 +34,14 @@ export const ProductItem = ({ product }: ProductItemProps) => {
         <h2 className="truncate text-sm text-[#323232]">{product.name}</h2>
         {product.discountPercentage > 0 ? (
           <p className="flex items-center gap-1">
-            {formatPrice(Number(calculateDiscountProduct(product)))}
+            {formatPrice(
+              Number(
+                calculateDiscountProduct({
+                  ...product,
+                  originalPrice: Number(product.originalPrice),
+                }),
+              ),
+            )}
             <span className="text-sm text-muted-foreground line-through">
               {formatPrice(Number(product.originalPrice))}
             </span>

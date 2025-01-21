@@ -1,5 +1,9 @@
 import { Product } from "@prisma/client";
 
+interface ProductWithNumberPrice extends Omit<Product, "originalPrice"> {
+  originalPrice: number;
+}
+
 export const formatPrice = (price: number) => {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -7,7 +11,7 @@ export const formatPrice = (price: number) => {
   }).format(price);
 };
 
-export const calculateDiscountProduct = (product: Product) => {
+export const calculateDiscountProduct = (product: ProductWithNumberPrice) => {
   const discount =
     (Number(product.originalPrice) * product.discountPercentage) / 100;
 

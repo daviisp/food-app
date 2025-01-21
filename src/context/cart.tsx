@@ -3,7 +3,7 @@
 import { Prisma } from "@prisma/client";
 import { createContext, ReactNode, useContext, useState } from "react";
 
-interface CartProduct
+export interface CartProduct
   extends Omit<
     Prisma.ProductGetPayload<{
       include: {
@@ -33,7 +33,22 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (product: CartProduct) => {
     setProducts((currentState) => {
-      return [...currentState, product];
+      // Verifica se o produto já está no carrinho
+      const productAlreadyInState = currentState.some(
+        (prod) => prod.id === product.id,
+      );
+
+      if (productAlreadyInState) {
+        // Se o produto já estiver no carrinho, aumente a quantidade em 1
+        return currentState.map((prod) =>
+          prod.id === product.id
+            ? { ...prod, quantity: prod.quantity + product.quantity } // Incrementa a quantidade
+            : prod,
+        );
+      }
+
+      // Se o produto não estiver no carrinho, adicione-o com quantity igual a 1
+      return [...currentState, { ...product, quantity: product.quantity }];
     });
   };
 

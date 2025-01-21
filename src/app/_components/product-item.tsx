@@ -5,11 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface ProductItemProps {
-  product: Prisma.ProductGetPayload<{
-    include: {
-      restaurant: true;
-    };
-  }>;
+  product: Omit<
+    Prisma.ProductGetPayload<{
+      include: {
+        restaurant: true;
+      };
+    }>,
+    "originalPrice"
+  > & {
+    originalPrice: number;
+  };
 }
 
 export const ProductItem = ({ product }: ProductItemProps) => {

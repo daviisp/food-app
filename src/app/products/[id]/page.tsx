@@ -1,13 +1,7 @@
 import { getProduct } from "@/actions/get-product";
-import { BackButton } from "@/app/_components/back-button";
 import { CategoryWithProducts } from "@/app/_components/category-with-products";
-import { ProductItem } from "@/app/_components/product-item";
-import { ProductList } from "@/app/_components/product-list";
 import { RestaurantDeliveryInfo } from "@/app/_components/restaurant-delivery-info";
 import { Button } from "@/components/ui/button";
-import { calculateDiscountProduct, formatPrice } from "@/helpers/price";
-import { ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ProductBanner } from "./_components/product-banner";
 import { ProductInfo } from "./_components/product-info";

@@ -16,7 +16,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ProductItem } from "@/app/_components/product-item";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ProductDetailsProps {
   product: Omit<
@@ -45,7 +53,8 @@ interface ProductDetailsProps {
 
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
   const [cartIsOpen, setCartIsOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1); // Começa com 1 em vez de 0, já que 0 não faz sentido para quantidade de produto
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const cart = useCart();
 
@@ -54,14 +63,32 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleAddToCart = () => {
+    const hasDifferentRestaurant = cart.products.some(
+      (cartProduct) => cartProduct.restaurantId !== product.restaurantId,
+    );
+
+    if (hasDifferentRestaurant) {
+      return setAlertDialogOpen(true);
+    }
+
     cart.addToCart({ ...product, quantity });
     setCartIsOpen(true);
+    toast.success("Produto adicionado com sucesso!");
+  };
+
+  const handleClearCartAndAddToCart = () => {
+    cart.clearCart();
+    handleAddToCart();
   };
 
   const showPriceWithDiscountAndQuantity = () => {
     const discount = calculateDiscountProduct(product);
     const totalPrice = discount * quantity;
     return formatPrice(totalPrice);
+  };
+
+  const showTotalPriceAndQuantity = () => {
+    return formatPrice(product.originalPrice * quantity);
   };
 
   const renderProductDetails = () => (
@@ -181,7 +208,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
                               {showPriceWithDiscountAndQuantity()}
                             </p>
                             <p className="text-xs text-muted-foreground line-through">
-                              {formatPrice(prod.originalPrice * prod.quantity)}
+                              {showTotalPriceAndQuantity()}
                             </p>
                           </div>
                         </div>
@@ -214,6 +241,22 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
             ))}
         </SheetContent>
       </Sheet>
+
+      <AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+          </AlertDialogHeader>
+          <p>
+            Ao adicionar esse produto, o seu carrinho será zerado e o produto
+            será adicionado!
+          </p>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={handleClearCartAndAddToCart}>
+            Confirmar
+          </AlertDialogAction>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

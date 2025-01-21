@@ -20,34 +20,37 @@ interface ICartContext {
   products: CartProduct[];
   addToCart: (product: CartProduct) => void;
   removeFromCart: (productId: string) => void;
+  clearCart: () => void;
 }
 
 export const CartContext = createContext<ICartContext>({
   products: [],
   addToCart: () => {},
   removeFromCart: () => {},
+  clearCart: () => {},
 });
 
 export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<CartProduct[]>([]);
 
+  const clearCart = () => {
+    return setProducts([]);
+  };
+
   const addToCart = (product: CartProduct) => {
     setProducts((currentState) => {
-      // Verifica se o produto já está no carrinho
       const productAlreadyInState = currentState.some(
         (prod) => prod.id === product.id,
       );
 
       if (productAlreadyInState) {
-        // Se o produto já estiver no carrinho, aumente a quantidade em 1
         return currentState.map((prod) =>
           prod.id === product.id
-            ? { ...prod, quantity: prod.quantity + product.quantity } // Incrementa a quantidade
+            ? { ...prod, quantity: prod.quantity + product.quantity }
             : prod,
         );
       }
 
-      // Se o produto não estiver no carrinho, adicione-o com quantity igual a 1
       return [...currentState, { ...product, quantity: product.quantity }];
     });
   };
@@ -55,7 +58,9 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const removeFromCart = () => {};
 
   return (
-    <CartContext.Provider value={{ products, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ products, clearCart, addToCart, removeFromCart }}
+    >
       {children}
     </CartContext.Provider>
   );

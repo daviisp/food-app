@@ -1,5 +1,6 @@
 "use client";
 
+import { formatPrice } from "@/helpers/price";
 import { Prisma } from "@prisma/client";
 import { createContext, ReactNode, useContext, useState } from "react";
 
@@ -21,6 +22,9 @@ interface ICartContext {
   addToCart: (product: CartProduct) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
+  totalPriceOfAllProductsWithoutDiscount: () => string;
+  decreaseQuantity: (productId: string) => void;
+  increaseQuantity: (productId: string) => void;
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -28,18 +32,20 @@ export const CartContext = createContext<ICartContext>({
   addToCart: () => {},
   removeFromCart: () => {},
   clearCart: () => {},
+  totalPriceOfAllProductsWithoutDiscount: () => "",
+  decreaseQuantity: () => {},
+  increaseQuantity: () => {},
 });
 
 export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<CartProduct[]>([]);
 
   const clearCart = () => {
-    return setProducts([]);
+    setProducts([]);
   };
-
   const addToCart = (product: CartProduct) => {
     setProducts((currentState) => {
-      const productAlreadyInState = currentState.some(
+      const productAlreadyInState = currentState.find(
         (prod) => prod.id === product.id,
       );
 
@@ -51,15 +57,64 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
         );
       }
 
+      // Se o produto não estiver no carrinho, adicione-o com quantity igual a 1
       return [...currentState, { ...product, quantity: product.quantity }];
     });
   };
 
-  const removeFromCart = () => {};
+  const removeFromCart = (productId: string) => {
+    setProducts((currentState) =>
+      currentState.filter((prod) => prod.id !== productId),
+    );
+  };
+
+  const totalPriceOfAllProductsWithoutDiscount = () => {
+    const totalPriceOfProducts = products.reduce((acc, product) => {
+      return acc + product.originalPrice * product.quantity;
+    }, 0);
+
+    return formatPrice(totalPriceOfProducts);
+  };
+
+  const decreaseQuantity = (productId: string) => {
+    setProducts((currentState) =>
+      currentState.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            quantity: Math.max(product.quantity - 1, 1),
+          };
+        }
+        return product;
+      }),
+    );
+  };
+
+  const increaseQuantity = (productId: string) => {
+    setProducts((currentState) =>
+      currentState.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            quantity: product.quantity + 1,
+          };
+        }
+        return product;
+      }),
+    );
+  };
 
   return (
     <CartContext.Provider
-      value={{ products, clearCart, addToCart, removeFromCart }}
+      value={{
+        products,
+        clearCart,
+        addToCart,
+        removeFromCart,
+        totalPriceOfAllProductsWithoutDiscount,
+        decreaseQuantity,
+        increaseQuantity,
+      }}
     >
       {children}
     </CartContext.Provider>

@@ -2,7 +2,11 @@
 
 import Image from "next/image";
 import { ProductBanner } from "./product-banner";
-import { calculateDiscountProduct, formatPrice } from "@/helpers/price";
+import {
+  calculateDiscountProduct,
+  calculateDiscountProductWithQuantity,
+  formatPrice,
+} from "@/helpers/price";
 import { ArrowDown, ChevronLeft, ChevronRight, TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RestaurantDeliveryInfo } from "@/app/_components/restaurant-delivery-info";
@@ -25,6 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ProductDetailsProps {
   product: Omit<
@@ -81,14 +86,16 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     handleAddToCart();
   };
 
-  const showPriceWithDiscountAndQuantity = () => {
-    const discount = calculateDiscountProduct(product);
-    const totalPrice = discount * quantity;
-    return formatPrice(totalPrice);
+  const handleRemoveFromCart = () => {
+    cart.removeFromCart(product.id);
+    toast.success("Produto removido com sucesso!");
   };
 
-  const showTotalPriceAndQuantity = () => {
-    return formatPrice(product.originalPrice * quantity);
+  const handleIncreaseProductQuantity = () => {
+    cart.increaseQuantity(product.id);
+  };
+  const handleDecreaseProductQuantity = () => {
+    cart.decreaseQuantity(product.id);
   };
 
   const renderProductDetails = () => (
@@ -183,62 +190,85 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
           <SheetHeader>
             <SheetTitle className="mb-6 text-left">Sacola</SheetTitle>
           </SheetHeader>
-          {cart.products.length > 0 &&
-            cart.products.map((prod) => (
-              <div key={prod.id} className="flex h-full flex-col">
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-4">
-                      <div>
-                        <Image
-                          src={prod.imageUrl}
-                          width={110}
-                          height={110}
-                          alt={prod.name}
-                          className="rounded-lg object-cover"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <div>
-                          <h2 className="mb-1 text-xs text-[#323232]">
-                            {prod.name}
-                          </h2>
-                          <div className="flex items-center gap-1">
-                            <p className="text-sm font-semibold">
-                              {showPriceWithDiscountAndQuantity()}
-                            </p>
-                            <p className="text-xs text-muted-foreground line-through">
-                              {showTotalPriceAndQuantity()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-1.5 space-x-2.5">
-                          <Button
-                            size="icon"
-                            className="h-8 w-8 rounded-lg border border-[#EEE] bg-white text-black hover:bg-white"
-                            onClick={decreaseQuantity}
-                          >
-                            <ChevronLeft size={16} />
-                          </Button>
-                          <span className="text-sm">{quantity}</span>
-                          <Button
-                            size="icon"
-                            className="h-8 w-8 rounded-lg bg-button hover:bg-button"
-                            onClick={incrementQuantity}
-                          >
-                            <ChevronRight size={16} />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+          <div className="flex flex-col space-y-4 overflow-y-scroll">
+            {cart.products.length > 0 &&
+              cart.products.map((prod) => (
+                <div
+                  key={prod.id}
+                  className="flex items-center justify-between rounded-lg bg-white p-4 shadow-md"
+                >
+                  <div className="flex gap-4">
                     <div>
-                      <TrashIcon />
+                      <Image
+                        src={prod.imageUrl}
+                        width={110}
+                        height={110}
+                        alt={prod.name}
+                        className="rounded-lg object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <div>
+                        <h2 className="mb-1 text-xs text-[#323232]">
+                          {prod.name}
+                        </h2>
+                        <div className="flex items-center gap-1">
+                          <p className="text-sm font-semibold">
+                            {formatPrice(
+                              calculateDiscountProductWithQuantity({
+                                ...prod,
+                                originalPrice: Number(prod.originalPrice),
+                                quantity: prod.quantity,
+                              }),
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground line-through">
+                            {formatPrice(prod.originalPrice * prod.quantity)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-1.5 space-x-2.5">
+                        <Button
+                          size="icon"
+                          className="h-8 w-8 rounded-lg border border-[#EEE] bg-white text-black hover:bg-white"
+                          onClick={handleDecreaseProductQuantity}
+                        >
+                          <ChevronLeft size={16} />
+                        </Button>
+                        <span className="text-sm">{prod.quantity}</span>
+                        <Button
+                          size="icon"
+                          className="h-8 w-8 rounded-lg bg-button hover:bg-button"
+                          onClick={handleIncreaseProductQuantity}
+                        >
+                          <ChevronRight size={16} />
+                        </Button>
+                      </div>
                     </div>
                   </div>
+                  <div>
+                    <Button variant="ghost" onClick={handleRemoveFromCart}>
+                      <TrashIcon size={16} />
+                    </Button>
+                  </div>
                 </div>
-                <div className="mb-8">preço</div>
-              </div>
-            ))}
+              ))}
+            <div className="pt-56">
+              <Card>
+                <CardContent className="flex justify-between">
+                  <div className="text-sm text-muted-foreground">
+                    <p>Subtotal</p>
+                    <p>Entrega</p>
+                    <p>Descontos</p>
+                    <p className="text-base font-semibold text-black">Total</p>
+                  </div>
+                  <div className="text-[#323232]">
+                    <p>{cart.totalPriceOfAllProductsWithoutDiscount()}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
 

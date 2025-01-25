@@ -30,6 +30,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { createOrder } from "@/actions/create-order";
+import { useSession } from "next-auth/react";
 
 interface ProductDetailsProps {
   product: Omit<
@@ -57,6 +60,8 @@ interface ProductDetailsProps {
 }
 
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
+  const { data: session } = useSession();
+
   const [cartIsOpen, setCartIsOpen] = useState(false);
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -91,11 +96,11 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     toast.success("Produto removido com sucesso!");
   };
 
-  const handleIncreaseProductQuantity = () => {
-    cart.increaseQuantity(product.id);
+  const handleIncreaseProductQuantity = (productId: string) => {
+    cart.increaseQuantity(productId);
   };
-  const handleDecreaseProductQuantity = () => {
-    cart.decreaseQuantity(product.id);
+  const handleDecreaseProductQuantity = (productId: string) => {
+    cart.decreaseQuantity(productId);
   };
 
   const renderProductDetails = () => (
@@ -117,7 +122,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
             <p className="text-lg font-semibold">
               {formatPrice(calculateDiscountProduct(product))}
             </p>
-            <div className="flex w-[23px] items-center justify-center rounded-full bg-button px-2 py-0.5 text-xs font-semibold text-white">
+            <div className="flex items-center justify-center rounded-full bg-button p-1 text-xs font-semibold text-white">
               <ArrowDown size={16} />
               {product.discountPercentage}%
             </div>
@@ -158,6 +163,17 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
     </div>
   );
 
+  const handleFinishedOrder = async () => {
+    try {
+      await createOrder({
+        products: cart.products,
+        restaurantId: cart.products[0].restaurantId,
+      });
+    } catch (err) {
+      toast.error("Algum erro aconteceu. Tente novamente");
+    }
+  };
+
   return (
     <>
       <div className="relative h-[370px] w-full">
@@ -179,18 +195,23 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
           <Button
             className="w-full rounded-lg bg-button px-4 py-3 text-sm font-semibold hover:bg-button/70"
             onClick={handleAddToCart}
+            disabled={!session}
           >
-            Adicionar à sacola
+            {!session ? (
+              <span>Faça Login</span>
+            ) : (
+              <span>Adicionar à sacola</span>
+            )}
           </Button>
         </div>
       </div>
 
       <Sheet open={cartIsOpen} onOpenChange={setCartIsOpen}>
-        <SheetContent className="w-10/12">
+        <SheetContent className="w-11/12 overflow-y-auto p-3">
           <SheetHeader>
-            <SheetTitle className="mb-6 text-left">Sacola</SheetTitle>
+            <SheetTitle className="mb-6 px-2 text-left">Sacola</SheetTitle>
           </SheetHeader>
-          <div className="flex flex-col space-y-4 overflow-y-scroll">
+          <div className="flex flex-col space-y-4 overflow-y-auto">
             {cart.products.length > 0 &&
               cart.products.map((prod) => (
                 <div
@@ -204,7 +225,7 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
                         width={110}
                         height={110}
                         alt={prod.name}
-                        className="rounded-lg object-cover"
+                        className="min-h-[110px] min-w-[110px] rounded-lg object-cover"
                       />
                     </div>
                     <div className="flex flex-col">
@@ -227,19 +248,19 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
                           </p>
                         </div>
                       </div>
-                      <div className="mt-1.5 space-x-2.5">
+                      <div className="w-22 mt-1.5 space-x-2.5">
                         <Button
                           size="icon"
                           className="h-8 w-8 rounded-lg border border-[#EEE] bg-white text-black hover:bg-white"
-                          onClick={handleDecreaseProductQuantity}
+                          onClick={() => handleDecreaseProductQuantity(prod.id)}
                         >
                           <ChevronLeft size={16} />
                         </Button>
-                        <span className="text-sm">{prod.quantity}</span>
+                        <span className="w-10 text-sm">{prod.quantity}</span>
                         <Button
                           size="icon"
                           className="h-8 w-8 rounded-lg bg-button hover:bg-button"
-                          onClick={handleIncreaseProductQuantity}
+                          onClick={() => handleIncreaseProductQuantity(prod.id)}
                         >
                           <ChevronRight size={16} />
                         </Button>
@@ -253,20 +274,69 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
                   </div>
                 </div>
               ))}
-            <div className="pt-56">
-              <Card>
-                <CardContent className="flex justify-between">
-                  <div className="text-sm text-muted-foreground">
-                    <p>Subtotal</p>
-                    <p>Entrega</p>
-                    <p>Descontos</p>
-                    <p className="text-base font-semibold text-black">Total</p>
-                  </div>
-                  <div className="text-[#323232]">
-                    <p>{cart.totalPriceOfAllProductsWithoutDiscount()}</p>
-                  </div>
-                </CardContent>
-              </Card>
+            <div className="pt-32">
+              {cart.products.length > 0 && (
+                <>
+                  <Card className="overflow-hidden">
+                    <CardContent className="space-y-4 p-5">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="text-muted-foreground">
+                          <p>Subtotal</p>
+                        </div>
+                        <div>
+                          <p className="text-[#323232]">
+                            {formatPrice(
+                              cart.totalPriceOfAllProductsWithoutDiscount,
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <Separator />
+                      <div className="flex items-center justify-between text-xs">
+                        <div>
+                          <p className="text-muted-foreground">Entrega</p>
+                        </div>
+                        <div>
+                          <p className="uppercase text-[#EA1D2C]">
+                            {cart.deliveryFeeOfRestaurant === 0
+                              ? "Grátis"
+                              : formatPrice(
+                                  Number(cart.deliveryFeeOfRestaurant),
+                                )}
+                          </p>
+                        </div>
+                      </div>
+                      <Separator />
+                      <div className="flex items-center justify-between text-xs">
+                        <div>
+                          <p className="text-muted-foreground">Descontos</p>
+                        </div>
+                        <div>
+                          <p className="text-[#323232]">
+                            {formatPrice(cart.totalDiscounts)}
+                          </p>
+                        </div>
+                      </div>
+                      <Separator />
+                      <div className="flex items-center justify-between text-sm font-semibold text-black">
+                        <div>
+                          <p>Total</p>
+                        </div>
+                        <div>
+                          <p>{formatPrice(cart.totalPrice)}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Button
+                    className="mt-6 w-full bg-button font-bold"
+                    onClick={handleFinishedOrder}
+                  >
+                    Finalizar Pedido
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </SheetContent>

@@ -57,7 +57,7 @@ const MyOders = async () => {
                 <Separator />
                 <div className="flex items-center gap-1.5 py-3">
                   <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#7E8392] text-sm text-white">
-                    1
+                    {order.quantity}
                   </span>
                   <p className="text-sm text-[#7E8392]">{order.product.name}</p>
                 </div>

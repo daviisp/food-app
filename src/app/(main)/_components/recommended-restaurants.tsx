@@ -1,3 +1,4 @@
+import { getFavoritesRestaurantsByUser } from "@/actions/get-favorites-restaurants-by-user";
 import { getRestaurants } from "@/actions/get-restaurants";
 import { RestaurantList } from "@/app/_components/restaurant-list";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,10 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 export const RecommendedRestaurants = async () => {
-  const restaurants = await getRestaurants({});
+  const [restaurants, userFavoritesRestaurants] = await Promise.all([
+    getRestaurants({}),
+    getFavoritesRestaurantsByUser(),
+  ]);
 
   return (
     <div className="space-y-4">
@@ -25,7 +29,10 @@ export const RecommendedRestaurants = async () => {
         </Button>
       </div>
       <div>
-        <RestaurantList restaurants={restaurants} />
+        <RestaurantList
+          restaurants={restaurants}
+          favoritesRestaurantsByUser={userFavoritesRestaurants!}
+        />
       </div>
     </div>
   );

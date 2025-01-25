@@ -1,14 +1,38 @@
+"use client";
+
+import { createFavoriteRestaurant } from "@/actions/create-favorite-restaurant";
 import { formatPrice } from "@/helpers/price";
-import { Restaurant } from "@prisma/client";
+import { Restaurant, UserFavoritesRestaurants } from "@prisma/client";
 import { BikeIcon, Heart, Star, TimerIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 
 interface RestaurantItemProps {
   restaurant: Restaurant;
+  favoritesRestaurantsByUser?: UserFavoritesRestaurants[];
 }
 
-export const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
+export const RestaurantItem = ({
+  restaurant,
+  favoritesRestaurantsByUser,
+}: RestaurantItemProps) => {
+  const isFavorite = favoritesRestaurantsByUser?.some(
+    (favorite) => favorite.restaurantId === restaurant.id,
+  );
+
+  const handleFavoriteRestaurant = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    try {
+      await createFavoriteRestaurant(restaurant.id);
+      toast.success("Restaurante adicionado como favorito com sucesso!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Algum erro aconteceu. Tente novamente");
+    }
+  };
+
   return (
     <Link
       href={`/restaurants/${restaurant.id}`}
@@ -27,9 +51,16 @@ export const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
             <span className="text-xs font-semibold text-[#323232]">5.0</span>
           </div>
         </div>
-        <div className="absolute right-2 top-2 h-7 w-7 rounded-full bg-[#3C3C3C] text-center">
+        <div
+          onClick={handleFavoriteRestaurant}
+          className={`absolute right-2 top-2 h-7 w-7 rounded-full ${isFavorite ? "bg-white" : "bg-[#3C3C3C]"} text-center`}
+        >
           <div className="flex h-full items-center justify-center">
-            <Heart size={16} fill="#FFF" className="text-[#FFF]" />
+            <Heart
+              size={16}
+              fill={isFavorite ? "#EA1B2C" : "#FFF"}
+              className={isFavorite ? "text-[#EA1B2C]" : "text-[#FFF]"}
+            />
           </div>
         </div>
       </div>

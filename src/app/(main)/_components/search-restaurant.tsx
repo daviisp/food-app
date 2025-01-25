@@ -40,10 +40,7 @@ export const SearchRestaurant = () => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex items-center gap-1"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-1">
         <FormField
           control={form.control}
           name="restaurantName"
@@ -60,7 +57,11 @@ export const SearchRestaurant = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" size="icon" className="bg-button">
+        <Button
+          type="submit"
+          size="icon"
+          className="bg-button hover:bg-button/80"
+        >
           <Search />
         </Button>
       </form>

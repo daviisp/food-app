@@ -1,8 +1,7 @@
 "use client";
 
-import { formatPrice } from "@/helpers/price";
 import { Prisma } from "@prisma/client";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 export interface CartProduct
   extends Omit<
@@ -22,7 +21,10 @@ interface ICartContext {
   addToCart: (product: CartProduct) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
-  totalPriceOfAllProductsWithoutDiscount: () => string;
+  totalPriceOfAllProductsWithoutDiscount: number;
+  deliveryFeeOfRestaurant: number | false;
+  totalDiscounts: number;
+  totalPrice: number;
   decreaseQuantity: (productId: string) => void;
   increaseQuantity: (productId: string) => void;
 }
@@ -32,7 +34,10 @@ export const CartContext = createContext<ICartContext>({
   addToCart: () => {},
   removeFromCart: () => {},
   clearCart: () => {},
-  totalPriceOfAllProductsWithoutDiscount: () => "",
+  totalPriceOfAllProductsWithoutDiscount: 0,
+  deliveryFeeOfRestaurant: 0,
+  totalDiscounts: 0,
+  totalPrice: 0,
   decreaseQuantity: () => {},
   increaseQuantity: () => {},
 });
@@ -43,6 +48,7 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const clearCart = () => {
     setProducts([]);
   };
+
   const addToCart = (product: CartProduct) => {
     setProducts((currentState) => {
       const productAlreadyInState = currentState.find(
@@ -57,7 +63,6 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
         );
       }
 
-      // Se o produto não estiver no carrinho, adicione-o com quantity igual a 1
       return [...currentState, { ...product, quantity: product.quantity }];
     });
   };
@@ -68,13 +73,11 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const totalPriceOfAllProductsWithoutDiscount = () => {
-    const totalPriceOfProducts = products.reduce((acc, product) => {
-      return acc + product.originalPrice * product.quantity;
+  const totalPriceOfAllProductsWithoutDiscount = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return acc + product.originalPrice;
     }, 0);
-
-    return formatPrice(totalPriceOfProducts);
-  };
+  }, [products]);
 
   const decreaseQuantity = (productId: string) => {
     setProducts((currentState) =>
@@ -104,6 +107,30 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  const deliveryFeeOfRestaurant =
+    products.length > 0 && Number(products[0].restaurant.deliveryFee);
+
+  const totalDiscounts = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return acc + (product.originalPrice * product.discountPercentage) / 100;
+    }, 0);
+  }, [products]);
+
+  const totalPrice = useMemo(() => {
+    return (
+      products.reduce((acc, product) => {
+        const totalPrice = product.originalPrice * product.quantity;
+        const totalDiscounts =
+          (product.originalPrice *
+            product.discountPercentage *
+            product.quantity) /
+          100;
+
+        return acc + (totalPrice - totalDiscounts);
+      }, 0) + Number(products[0]?.restaurant?.deliveryFee)
+    );
+  }, [products]);
+
   return (
     <CartContext.Provider
       value={{
@@ -112,8 +139,11 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
         addToCart,
         removeFromCart,
         totalPriceOfAllProductsWithoutDiscount,
+        deliveryFeeOfRestaurant,
         decreaseQuantity,
         increaseQuantity,
+        totalDiscounts,
+        totalPrice,
       }}
     >
       {children}

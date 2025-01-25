@@ -1,5 +1,9 @@
 "use server";
 
+import {
+  calculateDiscountProduct,
+  calculateDiscountProductWithQuantity,
+} from "@/helpers/price";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
@@ -30,17 +34,17 @@ export const createOrder = async (data: CreateOrderSchema) => {
       return;
     }
 
+    const totalPrice = calculateDiscountProduct({
+      ...findProductInDb,
+      originalPrice: Number(findProductInDb.originalPrice),
+    });
+
     await prisma.order.create({
       data: {
         productId: product.id,
         restaurantId: data.restaurantId,
         quantity: product.quantity,
-        price:
-          ((Number(findProductInDb.originalPrice) *
-            findProductInDb.discountPercentage) /
-            100) *
-            product.quantity +
-          Number(findProductInDb.restaurant.deliveryFee),
+        price: totalPrice * product.quantity,
         userId: session.user.id as string,
       },
     });

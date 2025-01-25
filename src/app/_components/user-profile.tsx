@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/sheet";
 import { quickOption } from "@/constants/quick-options";
 import { auth } from "@/lib/auth";
-import { Heart, Home, ListOrdered, Menu } from "lucide-react";
+import { Home, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ButtonMakeLogin } from "./button-make-login";
 import { ButtonLogout } from "./button-logout";
+import { MyOrdersAndMyRestaurants } from "./my-orders-and-my-restaurants";
 
 export const UserProfile = async () => {
   const session = await auth();
@@ -63,20 +64,7 @@ export const UserProfile = async () => {
               <Home size={16} />
               Início
             </Link>
-            <Link
-              href="/my-orders"
-              className="flex items-center gap-3 rounded-full px-4 py-3"
-            >
-              <ListOrdered size={16} />
-              Meus Pedidos
-            </Link>
-            <Link
-              href="/"
-              className="flex items-center gap-3 rounded-full px-4 py-3"
-            >
-              <Heart size={16} />
-              Restaurantes Favoritos
-            </Link>
+            <MyOrdersAndMyRestaurants />
           </div>
           <div className="py-6">
             <Separator />

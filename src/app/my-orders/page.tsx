@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/helpers/price";
-import { format, isBefore, startOfToday } from "date-fns";
+import { isBefore, startOfToday } from "date-fns";
 
 const MyOrders = async () => {
   const orders = await getOrdersByUser();

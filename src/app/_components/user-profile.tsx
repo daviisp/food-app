@@ -14,6 +14,7 @@ import { Heart, Home, ListOrdered, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ButtonMakeLogin } from "./button-make-login";
+import { ButtonLogout } from "./button-logout";
 
 export const UserProfile = async () => {
   const session = await auth();
@@ -23,7 +24,7 @@ export const UserProfile = async () => {
       <SheetTrigger>
         <Menu />
       </SheetTrigger>
-      <SheetContent className="w-10/12 overflow-y-auto">
+      <SheetContent className="w-10/12 overflow-y-auto [&::-webkit-scrollbar]:hidden">
         <SheetHeader>
           <SheetTitle className="text-left font-semibold text-[#323232]">
             Menu
@@ -50,11 +51,9 @@ export const UserProfile = async () => {
             <ButtonMakeLogin />
           </section>
         )}
-
         <div className="py-6">
           <Separator />
         </div>
-
         <nav>
           <div className="space-y-1 text-sm font-semibold">
             <Link
@@ -100,6 +99,14 @@ export const UserProfile = async () => {
             ))}
           </div>
         </nav>
+        <div className="py-4">
+          <Separator />
+        </div>
+        {session?.user && (
+          <div className="px-5">
+            <ButtonLogout />
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

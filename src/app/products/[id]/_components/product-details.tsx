@@ -20,7 +20,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,6 +62,8 @@ interface ProductDetailsProps {
 export const ProductDetails = ({ product }: ProductDetailsProps) => {
   const { data: session } = useSession();
 
+  const { toast } = useToast();
+
   const [cartIsOpen, setCartIsOpen] = useState(false);
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -83,7 +85,10 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
 
     cart.addToCart({ ...product, quantity });
     setCartIsOpen(true);
-    toast.success("Produto adicionado com sucesso!");
+    toast({
+      title: "Sucesso",
+      description: "Produto adicionado no carrinho com sucesso!",
+    });
   };
 
   const handleClearCartAndAddToCart = () => {
@@ -92,8 +97,18 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
   };
 
   const handleRemoveFromCart = () => {
-    cart.removeFromCart(product.id);
-    toast.success("Produto removido com sucesso!");
+    try {
+      cart.removeFromCart(product.id);
+      toast({
+        title: "Sucesso",
+        description: "Produto removido com sucesso!",
+      });
+    } catch (err) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível excluir o produto do carrinho",
+      });
+    }
   };
 
   const handleIncreaseProductQuantity = (productId: string) => {
@@ -170,7 +185,11 @@ export const ProductDetails = ({ product }: ProductDetailsProps) => {
         restaurantId: cart.products[0].restaurantId,
       });
     } catch (err) {
-      toast.error("Algum erro aconteceu. Tente novamente");
+      toast({
+        title: "Erro",
+        description: "Algum erro aconteceu. Tente novamente",
+        variant: "destructive",
+      });
     }
   };
 

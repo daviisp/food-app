@@ -3,15 +3,19 @@
 import { Heart, ListOrdered } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 export const MyOrdersAndMyRestaurants = () => {
   const { data: session } = useSession();
+  const { toast } = useToast();
 
   const verifyIfUserExists = (e: React.MouseEvent) => {
     if (!session?.user) {
       e.preventDefault();
-      return toast.error("Faça Login primeiro!");
+      return toast({
+        title: "Faça Login primeiro!",
+        variant: "destructive",
+      });
     }
   };
 

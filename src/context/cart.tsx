@@ -75,7 +75,7 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
 
   const totalPriceOfAllProductsWithoutDiscount = useMemo(() => {
     return products.reduce((acc, product) => {
-      return acc + product.originalPrice;
+      return acc + product.originalPrice * product.quantity;
     }, 0);
   }, [products]);
 

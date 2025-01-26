@@ -4,19 +4,24 @@ import { createFavoriteRestaurant } from "@/actions/create-favorite-restaurant";
 import { formatPrice } from "@/helpers/price";
 import { Restaurant, UserFavoritesRestaurants } from "@prisma/client";
 import { BikeIcon, Heart, Star, TimerIcon } from "lucide-react";
+import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 interface RestaurantItemProps {
   restaurant: Restaurant;
   favoritesRestaurantsByUser?: UserFavoritesRestaurants[];
+  user?: Session["user"];
 }
 
 export const RestaurantItem = ({
   restaurant,
   favoritesRestaurantsByUser,
+  user,
 }: RestaurantItemProps) => {
+  const { toast } = useToast();
+
   const isFavorite = favoritesRestaurantsByUser?.some(
     (favorite) => favorite.restaurantId === restaurant.id,
   );
@@ -26,10 +31,16 @@ export const RestaurantItem = ({
 
     try {
       await createFavoriteRestaurant(restaurant.id);
-      toast.success("Restaurante adicionado como favorito com sucesso!");
+      toast({
+        title: "Sucesso",
+        description: "Restaurante adicionado como favorito com sucesso!",
+      });
     } catch (err) {
       console.error(err);
-      toast.error("Algum erro aconteceu. Tente novamente");
+      toast({
+        title: "Erro",
+        description: "Algum erro aconteceu. Tente novamente",
+      });
     }
   };
 
@@ -51,18 +62,20 @@ export const RestaurantItem = ({
             <span className="text-xs font-semibold text-[#323232]">5.0</span>
           </div>
         </div>
-        <div
-          onClick={handleFavoriteRestaurant}
-          className={`absolute right-2 top-2 h-7 w-7 rounded-full ${isFavorite ? "bg-white" : "bg-[#3C3C3C]"} text-center`}
-        >
-          <div className="flex h-full items-center justify-center">
-            <Heart
-              size={16}
-              fill={isFavorite ? "#EA1B2C" : "#FFF"}
-              className={isFavorite ? "text-[#EA1B2C]" : "text-[#FFF]"}
-            />
+        {user && (
+          <div
+            onClick={handleFavoriteRestaurant}
+            className={`absolute right-2 top-2 h-7 w-7 rounded-full ${isFavorite ? "bg-white" : "bg-[#3C3C3C]"} text-center`}
+          >
+            <div className="flex h-full items-center justify-center">
+              <Heart
+                size={16}
+                fill={isFavorite ? "#EA1B2C" : "#FFF"}
+                className={isFavorite ? "text-[#EA1B2C]" : "text-[#FFF]"}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className="pt-3">
         <h2 className="text-sm font-semibold text-[#323232]">

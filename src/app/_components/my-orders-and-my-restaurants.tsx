@@ -13,7 +13,8 @@ export const MyOrdersAndMyRestaurants = () => {
     if (!session?.user) {
       e.preventDefault();
       return toast({
-        title: "Faça Login primeiro!",
+        title: "Erro",
+        description: "Faça seu login primeiro!",
         variant: "destructive",
       });
     }
@@ -30,7 +31,7 @@ export const MyOrdersAndMyRestaurants = () => {
         Meus Pedidos
       </Link>
       <Link
-        href="/"
+        href="/my-favorite-restaurants"
         className="flex items-center gap-3 rounded-full px-4 py-3"
         onClick={verifyIfUserExists}
       >

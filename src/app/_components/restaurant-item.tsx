@@ -1,6 +1,6 @@
 "use client";
 
-import { createFavoriteRestaurant } from "@/actions/create-favorite-restaurant";
+import { toggleFavoriteRestaurant } from "@/actions/toggleFavoriteRestaurant";
 import { formatPrice } from "@/helpers/price";
 import { Restaurant, UserFavoritesRestaurants } from "@prisma/client";
 import { BikeIcon, Heart, Star, TimerIcon } from "lucide-react";
@@ -30,10 +30,10 @@ export const RestaurantItem = ({
     e.preventDefault();
 
     try {
-      await createFavoriteRestaurant(restaurant.id);
+      await toggleFavoriteRestaurant(restaurant.id);
       toast({
         title: "Sucesso",
-        description: "Restaurante adicionado como favorito com sucesso!",
+        description: `Restaurante ${isFavorite ? "adicionado aos favoritos!" : "removido dos favoritos!"}`,
       });
     } catch (err) {
       console.error(err);

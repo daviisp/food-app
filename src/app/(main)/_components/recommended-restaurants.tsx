@@ -1,4 +1,4 @@
-import { getFavoritesRestaurantsByUser } from "@/actions/get-favorites-restaurants-by-user";
+import { getFavoriteRestaurantsByUser } from "@/actions/get-favorite-restaurants-by-user";
 import { getRestaurants } from "@/actions/get-restaurants";
 import { RestaurantList } from "@/app/_components/restaurant-list";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import Link from "next/link";
 export const RecommendedRestaurants = async () => {
   const [restaurants, userFavoritesRestaurants] = await Promise.all([
     getRestaurants({}),
-    getFavoritesRestaurantsByUser(),
+    getFavoriteRestaurantsByUser(),
   ]);
 
   return (

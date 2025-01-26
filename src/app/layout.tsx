@@ -24,7 +24,13 @@ export default function RootLayout({
     <SessionProvider>
       <html lang="pt-BR">
         <body className={`${inter.className} antialiased`}>
-          <main className="pb-8">
+          <div className="hidden h-screen items-center justify-center p-4 text-center md:flex">
+            <p>
+              Este aplicativo ainda não possui versão para dispositivos
+              desktops. Futuramente, essa versão estará disponível!
+            </p>
+          </div>
+          <main className="pb-8 md:hidden">
             <CartContextProvider>{children}</CartContextProvider>
           </main>
           <Toaster />

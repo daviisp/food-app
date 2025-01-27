@@ -6,7 +6,7 @@ export const Categories = async () => {
   const categories = await getCategories();
 
   return (
-    <div className="md:gap-18 flex gap-3 overflow-x-auto md:justify-center [&::-webkit-scrollbar]:hidden">
+    <div className="md:gap-18 flex gap-3 overflow-x-auto md:justify-center md:gap-[77px] [&::-webkit-scrollbar]:hidden">
       {categories.map((category) => (
         <Link
           key={category.id}

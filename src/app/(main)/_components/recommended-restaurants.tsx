@@ -14,7 +14,7 @@ export const RecommendedRestaurants = async () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold text-[#323232]">
+        <h2 className="font-semibold text-[#323232] md:text-lg">
           Restaurantes Recomendados
         </h2>
         <Button

@@ -49,7 +49,7 @@ export const RestaurantItem = ({
       href={`/restaurants/${restaurant.id}`}
       className="h-auto min-w-[226px]"
     >
-      <div className="relative min-h-[136px] w-full">
+      <div className="relative min-h-[136px] w-full md:min-h-[165px]">
         <Image
           src={restaurant.imageUrl}
           alt={restaurant.name}

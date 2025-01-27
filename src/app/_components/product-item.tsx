@@ -20,7 +20,7 @@ interface ProductItemProps {
 export const ProductItem = ({ product }: ProductItemProps) => {
   return (
     <Link href={`/products/${product.id}`} className="h-auto min-w-[150px]">
-      <div className="relative min-h-40 w-full">
+      <div className="relative min-h-40 w-full md:min-h-[180px]">
         <Image
           src={product.imageUrl}
           alt={product.name}

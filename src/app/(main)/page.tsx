@@ -35,7 +35,7 @@ const Home = () => {
             <SearchRestaurantDesktop />
           </div>
         </div>
-        <div>
+        <div className="hidden xl:block">
           <Image
             src="/banner-desktop.png"
             alt="Banner"
@@ -44,6 +44,10 @@ const Home = () => {
             unoptimized
           />
         </div>
+      </section>
+
+      <section className="hidden px-32 pt-8 md:block">
+        <Categories />
       </section>
 
       <section className="px-5 pt-6">

@@ -22,7 +22,7 @@ export const RestaurantInfo = ({ restaurant }: RestaurantInfoProps) => {
             alt={restaurant.name}
             width={30}
             height={30}
-            className="rounded-full object-cover"
+            className="h-[30px] w-[30px] rounded-full object-cover"
           />
           <h2 className="text-lg font-semibold">{restaurant.name}</h2>
         </div>
@@ -36,7 +36,7 @@ export const RestaurantInfo = ({ restaurant }: RestaurantInfoProps) => {
         {restaurant.categories.slice(0, 2).map((category) => (
           <div
             key={category.id}
-            className="rounded-md bg-[#F4F4F5] px-1.5 py-1 text-center text-xs text-[#7E8392]"
+            className="rounded-md bg-[#F4F4F5] px-1.5 py-1 text-center text-xs text-[#7E8392] md:text-sm"
           >
             <p>{category.name}</p>
           </div>

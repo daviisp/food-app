@@ -19,7 +19,7 @@ export const RecommendedRestaurants = async () => {
         </h2>
         <Button
           variant="ghost"
-          className="hover:text-[#EA1D2C]/ w-fit gap-0 p-0 text-xs text-[#EA1D2C] hover:bg-transparent"
+          className="hover:text-[#EA1D2C]/ w-fit gap-0 p-0 text-xs text-[#EA1D2C] hover:bg-transparent md:text-sm"
           asChild
         >
           <Link href="/restaurants">

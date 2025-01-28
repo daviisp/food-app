@@ -12,12 +12,12 @@ export const RestaurantDeliveryInfo = ({
   return (
     <div className="rounded-lg border border-[#F4F4F4] bg-white px-12 py-2.5">
       <div className="flex items-center justify-between">
-        <div className="flex flex-col items-center justify-center gap-0.5 text-xs text-[#7E8392]">
+        <div className="flex flex-col items-center justify-center gap-0.5 text-xs text-[#7E8392] md:text-sm">
           <div className="flex items-center gap-1">
             Entrega
             <BikeIcon size={16} />
           </div>
-          <div className="font-semibold text-black">
+          <div className="text-sm font-semibold text-black">
             {Number(restaurant.deliveryFee) === 0 ? (
               <p>Grátis</p>
             ) : (
@@ -25,13 +25,13 @@ export const RestaurantDeliveryInfo = ({
             )}
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-0.5 text-xs text-[#7E8392]">
+        <div className="flex flex-col items-center justify-center gap-0.5 text-xs text-[#7E8392] md:text-sm">
           <div className="flex items-center gap-1">
             Entrega
             <Timer size={16} />
           </div>
           <div>
-            <p className="font-semibold text-black">
+            <p className="text-sm font-semibold text-black">
               {restaurant.deliveryTime} min
             </p>
           </div>

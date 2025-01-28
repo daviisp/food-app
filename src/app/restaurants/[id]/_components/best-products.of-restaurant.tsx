@@ -18,7 +18,7 @@ export const BestProductsOfRestaurant = ({
 }: BestProductsOfRestaurantProps) => {
   return (
     <>
-      <h2 className="pb-4 font-semibold">Mais Pedidos</h2>
+      <h2 className="pb-4 font-semibold md:text-lg">Mais Pedidos</h2>
       <ProductList products={restaurant.products} />
     </>
   );

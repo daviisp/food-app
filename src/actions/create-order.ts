@@ -1,9 +1,6 @@
 "use server";
 
-import {
-  calculateDiscountProduct,
-  calculateDiscountProductWithQuantity,
-} from "@/helpers/price";
+import { calculateDiscountProduct } from "@/helpers/price";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {

@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import { Header } from "../_components/header";
 import { Banner } from "./_components/banner";
 import { Categories } from "./_components/categories";

@@ -1,7 +1,6 @@
 import { RestaurantDeliveryInfo } from "@/app/_components/restaurant-delivery-info";
-import { formatPrice } from "@/helpers/price";
 import { Prisma } from "@prisma/client";
-import { BikeIcon, Star, Timer } from "lucide-react";
+import { Star } from "lucide-react";
 import Image from "next/image";
 
 interface RestaurantInfoProps {

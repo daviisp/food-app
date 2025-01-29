@@ -1,4 +1,4 @@
-import { Prisma, Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ProductItem } from "./product-item";
 
 interface ProductListProps {

@@ -7,7 +7,6 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -55,7 +54,6 @@ export const FavoriteRestaurant = ({
           <AlertDialogDescription className="text-center">
             Tem certeza que deseja remover esse restaurante dos favoritos?
           </AlertDialogDescription>
-
           <div className="text-center">
             <AlertDialogCancel className="rounded-lg bg-[#F4F4F5] font-semibold">
               Cancelar

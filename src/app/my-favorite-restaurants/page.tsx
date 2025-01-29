@@ -11,18 +11,21 @@ const MyFavoriteRestaurants = async () => {
   return (
     <>
       <Header />
-      <section className="px-5">
-        <h2 className="py-6 text-lg font-semibold text-[#323232]">
+      <section className="px-5 md:px-32">
+        <h2 className="py-6 text-lg font-semibold text-[#323232] md:text-xl">
           Meus Restaurantes
         </h2>
-        <div className="space-y-6">
+        <div className="flex flex-wrap justify-start gap-5 md:space-y-0">
           {favoriteRestaurants?.length === 0 ? (
             <p className="text-muted-foreground">
               Você ainda não tem nenhum restaurante marcado como favorito.
             </p>
           ) : (
             favoriteRestaurants?.map((favoriteRestaurant) => (
-              <div className="h-[187px] w-full" key={favoriteRestaurant.id}>
+              <div
+                className="flex w-[381px] flex-col"
+                key={favoriteRestaurant.id}
+              >
                 <div className="relative h-[136px] w-full">
                   <Image
                     src={favoriteRestaurant.restaurant.imageUrl}
@@ -30,7 +33,6 @@ const MyFavoriteRestaurants = async () => {
                     fill
                     className="rounded-lg object-cover"
                   />
-
                   <div className="absolute left-2 top-2">
                     <div className="flex items-center gap-1 rounded-md bg-white px-2 py-1">
                       <Star
@@ -49,7 +51,7 @@ const MyFavoriteRestaurants = async () => {
                     />
                   </div>
                 </div>
-                <div className="pt-3">
+                <div className="flex flex-grow flex-col justify-between pt-3">
                   <h3 className="text-sm font-semibold text-[#323232]">
                     {favoriteRestaurant.restaurant.name}
                   </h3>

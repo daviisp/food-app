@@ -7,6 +7,7 @@ import { CategoryWithProducts } from "../../_components/category-with-products";
 import { Header } from "@/app/_components/header";
 import Image from "next/image";
 import { ShowTotalProductsInCart } from "./_components/show-total-producs-in-cart";
+import { Separator } from "@/components/ui/separator";
 
 interface RestaurantPageParams {
   params: Promise<{ id: string }>;
@@ -38,7 +39,10 @@ const RestaurantPage = async ({ params }: RestaurantPageParams) => {
       </div>
       <div className="hidden md:block">
         <Header />
-        <div className="mt-10 grid grid-cols-[2fr,1fr] gap-8 px-32">
+        <div className="pb-10 pt-5">
+          <Separator />
+        </div>
+        <div className="mt-10 grid grid-cols-[2fr,1fr] gap-8 px-32 md:mt-0">
           <div className="relative h-[380px] w-full">
             <Image
               src={restaurant.imageUrl}

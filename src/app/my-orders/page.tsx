@@ -32,8 +32,11 @@ const MyOrdersPage = async () => {
   return (
     <>
       <Header />
+      <div className="hidden pb-10 pt-5 md:block">
+        <Separator />
+      </div>
       <div>
-        <h2 className="px-5 py-6 text-lg font-semibold md:px-32 md:pb-6 md:pt-10 md:text-xl">
+        <h2 className="px-5 py-6 text-lg font-semibold md:px-32 md:pb-6 md:pt-0 md:text-xl">
           Meus Pedidos
         </h2>
         <div className="space-y-2 md:space-y-6">

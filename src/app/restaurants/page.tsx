@@ -1,8 +1,8 @@
 import { getRestaurants } from "@/actions/get-restaurants";
 import { Header } from "../_components/header";
 import { SearchRestaurant } from "../(main)/_components/search-restaurant";
-import Image from "next/image";
 import { RestaurantItem } from "../_components/restaurant-item";
+import { Separator } from "@/components/ui/separator";
 
 interface RestaurantPageParams {
   searchParams: Promise<{ restaurantName: string }>;
@@ -17,7 +17,10 @@ const RestaurantsPage = async ({ searchParams }: RestaurantPageParams) => {
   return (
     <>
       <Header />
-      <section className="px-5 pt-6 md:px-32 md:pt-12">
+      <div className="hidden pb-10 pt-5 md:block">
+        <Separator />
+      </div>
+      <section className="px-5 pt-6 md:px-32 md:pt-0">
         <SearchRestaurant />
       </section>
       <section className="px-5 pt-6 md:px-32 md:pt-10">

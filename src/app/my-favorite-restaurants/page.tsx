@@ -12,7 +12,7 @@ const MyFavoriteRestaurants = async () => {
     <>
       <Header />
       <section className="px-5 md:px-32">
-        <h2 className="py-6 text-lg font-semibold text-[#323232] md:text-xl">
+        <h2 className="py-6 text-lg font-semibold text-[#323232] md:pt-10 md:text-xl">
           Meus Restaurantes
         </h2>
         <div className="flex flex-wrap justify-start gap-5 md:space-y-0">

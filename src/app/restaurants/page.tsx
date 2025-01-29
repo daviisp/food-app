@@ -17,17 +17,17 @@ const RestaurantsPage = async ({ searchParams }: RestaurantPageParams) => {
   return (
     <>
       <Header />
-      <section className="px-5 pt-6">
+      <section className="px-5 pt-6 md:px-32 md:pt-12">
         <SearchRestaurant />
       </section>
-      <section className="px-5 pt-6">
+      <section className="px-5 pt-6 md:px-32 md:pt-10">
         {restaurantName && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground md:text-xl md:font-semibold md:text-[#323232]">
             Resultados para "{restaurantName}"
           </p>
         )}
 
-        <div className="mt-3 flex flex-col gap-4">
+        <div className="mt-3 flex flex-col gap-4 md:mt-6">
           {restaurants.map((restaurant) => (
             <RestaurantItem restaurant={restaurant} key={restaurant.id} />
           ))}

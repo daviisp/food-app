@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/helpers/price";
 import { isBefore, startOfToday } from "date-fns";
 
-const MyOrders = async () => {
+const MyOrdersPage = async () => {
   const orders = await getOrdersByUser();
 
   if (!orders) {
@@ -33,14 +33,16 @@ const MyOrders = async () => {
     <>
       <Header />
       <div>
-        <h2 className="px-5 py-6 text-lg font-semibold">Meus Pedidos</h2>
-        <div className="space-y-2">
+        <h2 className="px-5 py-6 text-lg font-semibold md:px-32 md:pb-6 md:pt-10 md:text-xl">
+          Meus Pedidos
+        </h2>
+        <div className="space-y-2 md:space-y-6">
           {sortedOrders.map((order) => {
             const orderDate = new Date(order.createdAt);
             const isOrderCompleted = isBefore(orderDate, today);
 
             return (
-              <Card key={order.id} className="mx-5">
+              <Card key={order.id} className="mx-5 md:mx-32">
                 <CardContent className="p-5">
                   <div>
                     <div
@@ -105,4 +107,4 @@ const MyOrders = async () => {
   );
 };
 
-export default MyOrders;
+export default MyOrdersPage;

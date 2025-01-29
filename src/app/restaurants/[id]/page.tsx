@@ -6,6 +6,7 @@ import { BestProductsOfRestaurant } from "./_components/best-products.of-restaur
 import { CategoryWithProducts } from "../../_components/category-with-products";
 import { Header } from "@/app/_components/header";
 import Image from "next/image";
+import { ShowTotalProductsInCart } from "./_components/show-total-producs-in-cart";
 
 interface RestaurantPageParams {
   params: Promise<{ id: string }>;
@@ -72,6 +73,9 @@ const RestaurantPage = async ({ params }: RestaurantPageParams) => {
             <CategoryWithProducts restaurant={restaurant} />
           </div>
         </div>
+      </div>
+      <div className="fixed bottom-0 w-full bg-white">
+        <ShowTotalProductsInCart />
       </div>
     </>
   );
